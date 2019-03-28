@@ -1,43 +1,55 @@
 $(document).ready(function(){
-  var autoScroll=1;
+  $('.carousel').each(function(){
+    var $this = $(this),
+        autoScroll=1,
+        play;
 //slideshow function
-function changeSlide(direct) 
-{
-  var currImg = $('img.active');
-  var nextImg = currImg.next('img');
-  var prevImg = currImg.prev('img');
-
+function changeSlide(direct){
+  var currImg = $this.find('.item.active'),
+      nextImg = currImg.next('.item'),
+      prevImg = currImg.prev('.item');
+  currImg.fadeOut().removeClass('active');
   if (direct == 'next') 
   {
-    if (nextImg.length!=0) nextImg.fadeIn().addClass('active');
+    if (nextImg.length)
+      currImg = currImg.next('.item');
     else
-      $('img').first().fadeIn().addClass('active');
+      currImg = $this.find('.item').first();
   } 
-  else 
+  else  
   {
-    if (prevImg.length!=0) prevImg.fadeIn().addClass('active');
+    if (prevImg.length) 
+      currImg = currImg.prev('.item');
     else
-      $('img').last().fadeIn().addClass('active');
+      currImg = $this.find('.item').last();
   }
-  
-  currImg.fadeOut().removeClass('active');
+  currImg.fadeIn().addClass('active');
 };
 //next button
-$('.btn-next').click(function(){changeSlide('next');});
+$this.find('.right').click(function(){
+  changeSlide('next');
+});
 //prev button
-$('.btn-prev').click(function(){changeSlide('prev');});
+$this.find('.left').click(function(){
+  changeSlide('prev');
+});
 //auto scroll
 function autoPlay(){
- play = setInterval(function (){changeSlide('next');} , 5000);
+ play = setInterval(function (){
+          changeSlide('next');
+          }, 1000);
+ };
+if(autoScroll == 1)
+{
+  autoPlay(); 
 }
-if(autoScroll == 1){
-    autoPlay(); 
-  }
 //hover image & 2button -> auto scroll off
-$('img, .btn-prev, .btn-next').hover(function() {
+$this.find('.item, .left, .right').hover(function(){
   clearInterval(play);
-}, function(){
-  autoPlay();
-});
+  },function(){
+    autoPlay();
+    });
 
-})
+ });
+
+});
